@@ -27,7 +27,7 @@ def callback(data):
     
 def listener():
 
-    rospy.init_node('listener', anonymous=True)
+    rospy.init_node('sendDataToNetworkTable', anonymous=True)
 
     rospy.Subscriber("ULTRASONIC1", String, callback)
     rospy.Subscriber("ULTRASONIC2", String, callback)
