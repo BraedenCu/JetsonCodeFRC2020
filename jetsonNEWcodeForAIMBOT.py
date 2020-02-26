@@ -64,7 +64,7 @@ def main() :
 
             ret, image = image_ocv
             #not sure if resize function will work
-            frame = cv2.resize(image, (1920, 180))
+            frame = cv2.resize(image, (1920, 1080))
 
             imgHSV = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
        
