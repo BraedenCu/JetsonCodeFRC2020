@@ -2,10 +2,32 @@ import cv2
 import numpy as np 
 import pyzed.sl as sl
 import sys
+import threading
+from networktables import NetworkTables
+
+cond = threading.Condition()
+notified = [False]
+
+def connectionListener(connected, info):
+    print(info, '; Connected=%s' % connected)
+    with cond:
+        notified[0] = True
+        cond.notify()
+
+NetworkTables.initialize(server='10.80.29.2')
+NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
+
+with cond:
+    print("Waiting")
+    if not notified[0]:
+        cond.wait()
+
+
 
 def main() :
     #default vars
-    error = False
+    #error if 1, no error is 0
+    error = 0
     AngleValue = 0
     RotationValue = 0
     xOffset = 0
@@ -45,9 +67,13 @@ def main() :
     depth_image_zed = sl.Mat(image_size.width, image_size.height, sl.MAT_TYPE.U8_C4)
     point_cloud = sl.Mat()
 
+    #Network table info
+    table = NetworkTables.getTable('8029data')
+
     while True:
         err = zed.grab(runtime)
         if err == sl.ERROR_CODE.SUCCESS :
+
             # Retrieve the left image, depth image in the half-resolution
             zed.retrieve_image(image_zed, sl.VIEW.LEFT, sl.MEM.CPU, image_size)
             zed.retrieve_image(depth_image_zed, sl.VIEW.DEPTH, sl.MEM.CPU, image_size)
@@ -63,6 +89,7 @@ def main() :
             #cv2.imshow("Depth", depth_image_ocv)
 
             ret, image = image_ocv
+
             #not sure if resize function will work
             frame = cv2.resize(image, (1920, 1080))
 
@@ -91,15 +118,21 @@ def main() :
                     err, point_cloud_value = point_cloud.get_value(x, y)
                     distance = math.sqrt(point_cloud_value[0] * point_cloud_value[0] + point_cloud_value[2] * point_cloud_value[2])
                     print(distance)
-                    
-                    
+                    table.putNumber('xOffset', xOffset)
+                    table.putNumer('distanceToTarget', distance)
+                           
                 else:
+                    xOffset = 0
+                    distance = 0
+                    table.putNumber('xOffset', xOffset)
+                    table.putNumer('distanceToTarget', distance)
                     break
 
   
         else:
             #send network tables error, Bryon's time to pop off
-            error = True
+            error = 1
+            table.putNumber('visionError', 1)
 
     #close everything down if it fails, WHICH IT WON'T
     cv2.destroyAllWindows()
