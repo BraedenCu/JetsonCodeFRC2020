@@ -70,7 +70,7 @@ def main() :
        
             mask=cv2.inRange(imgHSV,lowerBound,upperBound)
             maskOpen=cv2.morphologyEx(mask,cv2.MORPH_OPEN,kernelOpen)
-            maskClose=cv2.morphologyEx(maskOpen,cv2.MORPH_CLOSE,kernelClose
+            maskClose=cv2.morphologyEx(maskOpen,cv2.MORPH_CLOSE,kernelClose)
             maskFinal=maskClose
             _, conts, _= cv2.findContours(maskFinal.copy(),cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
