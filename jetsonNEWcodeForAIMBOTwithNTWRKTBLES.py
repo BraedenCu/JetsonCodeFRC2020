@@ -88,7 +88,7 @@ def main() :
             #cv2.imshow("Image", image_ocv)
             #cv2.imshow("Depth", depth_image_ocv)
 
-            ret, image = image_ocv
+            ret, image = image_ocv.read()
 
             #not sure if resize function will work
             frame = cv2.resize(image, (1920, 1080))
