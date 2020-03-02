@@ -13,6 +13,7 @@ def main() :
     middleOfRes = xRes/2
     #vars
     #Green Tone, change based on tone of light. MAY BE TOO WIDE CURRENTLY
+    #ITS IN GBR NOT RGB
     lowerBound=np.array([33,80,40])
     upperBound=np.array([102,255,255])
 
