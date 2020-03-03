@@ -4,7 +4,6 @@ import numpy as np
 lowerBound=np.array([33,80,40])
 upperBound=np.array([102,255,255])
 
-red = (255,0,0)
 
 cam = cv2.VideoCapture(0)
 
