@@ -88,10 +88,14 @@ def main() :
                     x,y,w,h=cv2.boundingRect(conts[i])
                     cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255), 2)
                     xcenter = (int(M["m10"] / M["m00"]))
-                    print(xcenter)
-                    xOffset = int(xcenter - middleOfRes)
-                    print(xOffset)
-                    print(x)
+                    #print(xcenter)
+                    if xcenter => 0:
+                        xOffset1 = int(xcenter - middleOfRes)
+                        xOffset = xOffset1
+                    if xcenter < 0:
+                        xOffset1 = int(xcenter - middleOfRes)
+                        xOffset = xOffset1 * -1
+                        
                     err, point_cloud_value = point_cloud.get_value(x, y)
                     distance = math.sqrt(point_cloud_value[0] * point_cloud_value[0] + point_cloud_value[2] * point_cloud_value[2])
                     print(distance)
